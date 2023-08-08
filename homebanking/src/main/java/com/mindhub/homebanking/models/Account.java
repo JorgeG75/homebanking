@@ -5,7 +5,6 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 public class Account {
@@ -17,7 +16,6 @@ public class Account {
     private Client client;
     private String number;
     private LocalDate creationDate;
-    private LocalDateTime localDateTime;
     private Double balance;
 
     public Account(){}
@@ -27,7 +25,7 @@ public class Account {
         this.number = number;
         this.balance = balance;
         this.creationDate = LocalDate.now();
-        this.localDateTime = LocalDateTime.now();
+
     }
 
     public Long getId() {
@@ -56,14 +54,6 @@ public class Account {
 
     public void setCreationDate(LocalDate creationDate) {
         this.creationDate = creationDate;
-    }
-
-    public LocalDateTime getLocalDateTime() {
-        return localDateTime;
-    }
-
-    public void setLocalDateTime(LocalDateTime localDateTime) {
-        this.localDateTime = localDateTime;
     }
 
     public Double getBalance() {
