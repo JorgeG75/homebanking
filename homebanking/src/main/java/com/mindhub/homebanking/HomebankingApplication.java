@@ -40,14 +40,16 @@ public class HomebankingApplication {
 			accountRepository.save(account2);
 
 
-			Transaction creditTransactionClient = new Transaction(account1, TransactionType.CREDIT, 1500.0, LocalDateTime.now(),"credit");
-			account1.addTransaction(creditTransactionClient);
-			transactionRepository.save(creditTransactionClient);
+			Transaction credit1= new Transaction(account1, TransactionType.CREDIT, 1500.0, LocalDateTime.now(),"credit");
+			Transaction debit1t = new Transaction(account2, TransactionType.DEBIT, 1000.0, LocalDateTime.now(), "debit");
 
-			Transaction debitTransacttioClient = new Transaction(account2, TransactionType.DEBIT, 1000.0, LocalDateTime.now(), "debit");
-			account2.addTransaction(debitTransacttioClient);
-			transactionRepository.save(debitTransacttioClient);
+			account1.addTransaction(credit1);
+			account2.addTransaction(debit1t);
+			transactionRepository.save(credit1);
+			transactionRepository.save(debit1t);
 
+
+//nuevo cliente
 			Client client1 = new Client("Tomas", "Martinez", "newtmartinez@mindhub.com");
 			System.out.println(client1);
 			clientRepository.save(client1);
