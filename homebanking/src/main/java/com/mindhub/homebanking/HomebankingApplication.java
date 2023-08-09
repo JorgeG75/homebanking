@@ -2,14 +2,18 @@ package com.mindhub.homebanking;
 
 import com.mindhub.homebanking.models.Account;
 import com.mindhub.homebanking.models.Client;
+import com.mindhub.homebanking.models.Transaction;
+import com.mindhub.homebanking.models.TransactionType;
 import com.mindhub.homebanking.repositories.AccountRepository;
 import com.mindhub.homebanking.repositories.ClientRepository;
+import com.mindhub.homebanking.repositories.TransactionRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @SpringBootApplication
 public class HomebankingApplication {
@@ -19,7 +23,7 @@ public class HomebankingApplication {
 	}
 
 	@Bean
-	public CommandLineRunner init(ClientRepository clientRepository, AccountRepository accountRepository) {
+	public CommandLineRunner init(ClientRepository clientRepository, AccountRepository accountRepository, TransactionRepository transactionRepository) {
 		return args -> {
 
 			Client client = new Client("Melba", "Morel","melba@mindhub.com");
@@ -34,6 +38,15 @@ public class HomebankingApplication {
 
 			accountRepository.save(account1);
 			accountRepository.save(account2);
+
+
+			Transaction creditTransactionClient = new Transaction(account1, TransactionType.CREDIT, 1500.0, LocalDateTime.now(),"credit");
+			account1.addTransaction(creditTransactionClient);
+			transactionRepository.save(creditTransactionClient);
+
+			Transaction debitTransacttioClient = new Transaction(account2, TransactionType.DEBIT, 1000.0, LocalDateTime.now(), "debit");
+			account2.addTransaction(debitTransacttioClient);
+			transactionRepository.save(debitTransacttioClient);
 
 			Client client1 = new Client("Tomas", "Martinez", "newtmartinez@mindhub.com");
 			System.out.println(client1);
