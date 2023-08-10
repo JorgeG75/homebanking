@@ -59,6 +59,7 @@ public class Transaction {
 
     public void setAmount(Double amount, TransactionType type) {
 
+        //muestra el saldo negativo para debit
         this.amount = this.type.equals(TransactionType.CREDIT)? amount : -amount;
     }
 
