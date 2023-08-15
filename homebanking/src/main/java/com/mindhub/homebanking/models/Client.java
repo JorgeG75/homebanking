@@ -4,6 +4,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -19,26 +20,21 @@ public class Client {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "client")
     private Set<Account> accounts = new HashSet<>();
 
-    //Constructor vacío para hibernate
-    public Client(){}
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "client")
+    private Set<ClientLoan> clientLoans = new HashSet<>();
 
-    public Client(String firstName, String lastName, String mail){
+    //Constructor vacío para hibernate
+    public Client() {
+    }
+
+    public Client(String firstName, String lastName, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.mail = mail;
+        this.mail = email;
     }
 
     public Long getId() {
         return id;
-    }
-
-    public Set<Account> getAccounts() {
-        return accounts;
-    }
-
-    public void addAccount(Account account){
-        account.setClient(this);
-        this.accounts.add(account);
     }
 
     public String getFirstName() {
@@ -68,10 +64,40 @@ public class Client {
     @Override
     public String toString() {
         return "Client{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
+                "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", mail='" + mail + '\'' +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Client client = (Client) o;
+        return Objects.equals(firstName, client.firstName) && Objects.equals(lastName, client.lastName) && Objects.equals(mail, client.mail);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(firstName, lastName, mail);
+    }
+
+
+    public Set<Account> getAccounts() {
+        return accounts;
+    }
+
+    public void addAccount(Account account) {
+        accounts.add(account);
+    }
+
+    public Set<ClientLoan> getClientLoans() {
+        return clientLoans;
+    }
+
+    public void addClientLoan(ClientLoan clientLoan) {
+        clientLoans.add(clientLoan);
+    }
+
 }
