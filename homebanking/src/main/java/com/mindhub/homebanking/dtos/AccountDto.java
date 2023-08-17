@@ -10,13 +10,9 @@ import static java.util.stream.Collectors.toList;
 public class AccountDto {
 
     private Long id;
-
     private String number;
-
     private Double balance;
-
     private LocalDate creationDate;
-
     private List<TransactionDto> transactions;
 
     public AccountDto(Account account) {

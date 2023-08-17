@@ -1,11 +1,14 @@
 package com.mindhub.homebanking.models;
 
+import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 public class Client {
@@ -98,6 +101,10 @@ public class Client {
 
     public void addClientLoan(ClientLoan clientLoan) {
         clientLoans.add(clientLoan);
+    }
+    @JsonIgnore
+    public List<Loan> getLoans(){
+        return clientLoans.stream().map(client -> client.getLoan()).collect(Collectors.toList());
     }
 
 }
