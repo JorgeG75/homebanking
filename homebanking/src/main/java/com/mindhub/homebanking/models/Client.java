@@ -6,7 +6,6 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -14,97 +13,73 @@ import java.util.stream.Collectors;
 public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
-    @GenericGenerator(name = "native", strategy = "native")
+    @GenericGenerator(name = "native",strategy = "native")
     private Long id;
     private String firstName;
     private String lastName;
     private String mail;
-
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "client")
     private Set<Account> accounts = new HashSet<>();
+    @OneToMany (fetch = FetchType.EAGER, mappedBy = "client")
+    private Set<ClientLoan> loans = new HashSet<>();
+    @OneToMany (fetch = FetchType.EAGER, mappedBy = "client")
+    private Set<Card> cards = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "client")
-    private Set<ClientLoan> clientLoans = new HashSet<>();
+    public Client(){ }
 
-    //Constructor vacío para hibernate
-    public Client() {
-    }
-
-    public Client(String firstName, String lastName, String email) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.mail = email;
+    public Client(String firstName, String lastName, String mail){
+        this.firstName= firstName;
+        this.lastName= lastName;
+        this.mail= mail;
     }
 
     public Long getId() {
         return id;
     }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getMail() {
-        return mail;
-    }
-
-    public void setMail(String mail) {
-        this.mail = mail;
-    }
-
-    @Override
-    public String toString() {
-        return "Client{" +
-                "firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", mail='" + mail + '\'' +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Client client = (Client) o;
-        return Objects.equals(firstName, client.firstName) && Objects.equals(lastName, client.lastName) && Objects.equals(mail, client.mail);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(firstName, lastName, mail);
-    }
-
-
     public Set<Account> getAccounts() {
         return accounts;
     }
+    public String getFirstName() {
+        return firstName;
+    }
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+    public String getLastName() {
+        return lastName;
+    }
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+    public String getMail() {
+        return mail;
+    }
+    public void setMail(String mail) {
+        this.mail = mail;
+    }
+    public Set<ClientLoan> getClientLoans() {
+        return loans;
+    }
+    public void setLoans(Set<ClientLoan> loans) {
+        this.loans = loans;
+    }
+    public Set<Card> getCards() { return cards;}
+    public void setCards(Set<Card> cards) { this.cards = cards;}
 
-    public void addAccount(Account account) {
+    public void addAccount(Account account){
+        account.setClient(this);
         accounts.add(account);
     }
-
-    public Set<ClientLoan> getClientLoans() {
-        return clientLoans;
+    public void addClientLoan (ClientLoan clientLoan){
+        clientLoan.setClient(this);
+        loans.add(clientLoan);
     }
-
-    public void addClientLoan(ClientLoan clientLoan) {
-        clientLoans.add(clientLoan);
+    public void addCard (Card card){
+        card.setClient(this);
+        cards.add(card);
     }
     @JsonIgnore
-    public List<Loan> getLoans(){
-        return clientLoans.stream().map(client -> client.getLoan()).collect(Collectors.toList());
+    public List<Loan> getLoans (){
+        return loans.stream().map(clientLoan -> clientLoan.getLoan()).collect(Collectors.toList());
     }
-
 }

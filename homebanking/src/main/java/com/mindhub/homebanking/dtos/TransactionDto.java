@@ -6,45 +6,33 @@ import com.mindhub.homebanking.models.TransactionType;
 import java.time.LocalDateTime;
 
 public class TransactionDto {
-
     private Long id;
-
     private TransactionType type;
-
     private Double amount;
-
+    private String description;
     private LocalDateTime date;
 
-    private String description;
-
-
-    public TransactionDto(){};
-
-    public TransactionDto(Transaction transaction) {
-        this.id = transaction.getId();
-        this.type = transaction.getType();
-        this.amount = transaction.getAmount();
-        this.date = transaction.getDate();
-        this.description = transaction.getDescription();
+    public TransactionDto (Transaction transaction){
+        id= transaction.getId();
+        type=transaction.getType();
+        amount=transaction.getAmount();
+        description= transaction.getDescription();
+        date= LocalDateTime.now();
     }
 
     public Long getId() {
         return id;
     }
-
     public TransactionType getType() {
         return type;
     }
-
     public Double getAmount() {
         return amount;
     }
-
-    public LocalDateTime getDate() {
-        return date;
-    }
-
     public String getDescription() {
         return description;
+    }
+    public LocalDateTime getDate() {
+        return date;
     }
 }

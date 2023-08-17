@@ -2,32 +2,32 @@ package com.mindhub.homebanking.dtos;
 
 import com.mindhub.homebanking.models.Client;
 
-import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toList;
-
-public class ClientDto  {
-
+public class ClientDto {
     private Long id;
     private String firstName;
     private String lastName;
     private String mail;
+    private Set<AccountDto> accounts;
+    private Set<ClientLoanDto> loans;
+    private Set<CardDto> cards;
 
-    private List<AccountDto> accounts;
-    private List<ClientLoanDTO> loans;
-    public ClientDto(Client client) {
-
-        this.id = client.getId();
-
-        this.firstName = client.getFirstName();
-        this.lastName = client.getLastName();
-        this.mail = client.getMail();
-        this.accounts= client.getAccounts().stream()
-                .map(AccountDto::new)
-                .collect(toList());
-        this.loans = client.getClientLoans().stream()
-                .map(ClientLoanDTO::new)
-                .collect(toList());
+    public ClientDto (Client client){
+        id = client.getId();
+        firstName= client.getFirstName();
+        lastName= client.getLastName();
+        mail= client.getMail();
+        accounts= client.getAccounts().stream()
+                .map(element -> new AccountDto(element))
+                .collect(Collectors.toSet());
+        loans=client.getClientLoans().stream()
+                .map(clientLoan-> new ClientLoanDto(clientLoan))
+                .collect(Collectors.toSet());
+        cards= client.getCards().stream()
+                .map(card -> new CardDto(card))
+                .collect(Collectors.toSet());
     }
 
     public Long getId() {
@@ -42,10 +42,9 @@ public class ClientDto  {
     public String getMail() {
         return mail;
     }
-    public List<AccountDto> getAccounts() {
+    public Set<AccountDto> getAccounts() {
         return accounts;
     }
-    public List<ClientLoanDTO> getLoans() {
-        return loans;
-    }
+    public Set<ClientLoanDto> getLoans() {return loans;}
+    public Set<CardDto> getCards() { return cards; }
 }

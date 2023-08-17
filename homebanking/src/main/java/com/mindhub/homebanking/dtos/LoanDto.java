@@ -5,7 +5,6 @@ import com.mindhub.homebanking.models.Loan;
 import java.util.List;
 
 public class LoanDto{
-
     private Long id;
     private String name;
     private Double maxAmount;
@@ -21,15 +20,12 @@ public class LoanDto{
     public Long getId() {
         return id;
     }
-
     public String getName() {
         return name;
     }
-
     public Double getMaxAmount() {
         return maxAmount;
     }
-
     public List<Integer> getPayments() {
         return payments;
     }
