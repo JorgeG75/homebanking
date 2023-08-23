@@ -18,8 +18,7 @@ public class WebAuthorization {
 
 
         http.authorizeRequests()
-                .antMatchers("/web/index.html","/web/js/**","/web/css/**","/web/img/**").permitAll()
-                .antMatchers("/admin/**","/rest/**").hasAuthority("ADMIN")
+
                 .antMatchers(HttpMethod.GET,"/api/clients/current","/web/**","/api/accounts/**").hasAuthority("USER")
                 .antMatchers(HttpMethod.POST,"/api/**").permitAll()
                 .anyRequest().denyAll();
