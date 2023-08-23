@@ -3,11 +3,14 @@ package com.mindhub.homebanking.controllers;
 import com.mindhub.homebanking.dtos.AccountDto;
 import com.mindhub.homebanking.repositories.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Objects;
+
 import static java.util.stream.Collectors.toList;
 
 @RestController
@@ -23,8 +26,11 @@ public class AccountController {
                 .collect(toList());
     }
     @RequestMapping("/accounts/{id}")
-    public AccountDto getById(@PathVariable Long id){
-        return new AccountDto(accountRepository.findById(id).orElse(null));
+    public AccountDto getById(@PathVariable Long id, Authentication authentication){
+        if(!accountRepository.findById(id).get().getClient().getMail().equals(authentication.getName())){
+            return null;
+        }
+        return new AccountDto(Objects.requireNonNull(accountRepository.findById(id).orElse(null)));
     }
 
 }

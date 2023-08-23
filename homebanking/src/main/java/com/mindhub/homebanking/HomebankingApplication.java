@@ -2,10 +2,12 @@ package com.mindhub.homebanking;
 
 import com.mindhub.homebanking.models.*;
 import com.mindhub.homebanking.repositories.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,13 +19,16 @@ public class HomebankingApplication {
 		SpringApplication.run(HomebankingApplication.class, args);
 	}
 
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
 	@Bean
 	public CommandLineRunner initData(ClientRepository clientRepository, AccountRepository accountRepository,
 									  TransactionRepository transactionRepository, LoanRepository loanRepository,
 									  ClientLoanRepository clientLoanRepository,CardRepository cardRepository){
 		return args -> {
 
-			Client client = new Client("Melba", "Morel","melba@mindhub.com");
+			Client client = new Client("Melba", "Morel","melba@mindhub.com", passwordEncoder.encode("123456"));
 			clientRepository.save(client);
 
 			Account account1 = new Account(client,"VIN001", 5000.0, LocalDate.now());
@@ -53,7 +58,7 @@ public class HomebankingApplication {
 
 
             //nuevo cliente
-			Client client1 = new Client("Tomas", "Martinez", "newtmartinez@mindhub.com");
+			Client client1 = new Client("Tomas", "Martinez", "newtmartinez@mindhub.com", passwordEncoder.encode("654321"));
 			clientRepository.save(client1);
 
 			Account newAccount = new Account(client1, "VIN003", 8000.0, LocalDate.now());
@@ -76,14 +81,6 @@ public class HomebankingApplication {
 			transactionRepository.save(newcredit2);
 			transactionRepository.save(newdebit2);
 			transactionRepository.save(newcredit3);
-
-			/*List<String> credits = List.of("hipotecario", "personal","automotriz");
-			List<Integer> payments = List.of(2, 4,6,12,24,32,48,60);
-
-			for (String i: credits){
-				loanRepository.save(new Loan(i, 40000.0, payments));
-			}*/
-
 
 			Loan loan1 = new Loan("hipotecario", 500000.0, List.of(12,24,36,48,60));
 			loanRepository.save(loan1);
