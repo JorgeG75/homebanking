@@ -45,6 +45,8 @@ public class ClientDto {
     public Set<AccountDto> getAccounts() {
         return accounts;
     }
-    public Set<ClientLoanDto> getLoans() {return loans;}
-    public Set<CardDto> getCards() { return cards; }
+    public Set<ClientLoanDto> getLoans() {
+        return loans;}
+    public Set<CardDto> getCards() {
+        return cards; }
 }

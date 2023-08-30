@@ -15,12 +15,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class WebAuthentication extends GlobalAuthenticationConfigurerAdapter {
-
     @Autowired
     ClientRepository clientRepository;
-
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
     @Override
-
     public void init(AuthenticationManagerBuilder auth) throws Exception {
 
         auth.userDetailsService(inputName-> {
@@ -28,26 +29,17 @@ public class WebAuthentication extends GlobalAuthenticationConfigurerAdapter {
             Client client = clientRepository.findByMail(inputName);
 
             if (client != null) {
-
+                if (client.getMail().contains("admin.com")){
+                    return new User(client.getMail(),client.getPassword(),
+                            AuthorityUtils.createAuthorityList("ADMIN"));
+                }
                 return new User(client.getMail(), client.getPassword(),
-
-                        AuthorityUtils.createAuthorityList("USER"));
+                        AuthorityUtils.createAuthorityList("CLIENT"));
 
             } else {
-
-                throw new UsernameNotFoundException("Unknown user: " + inputName);
-
+                throw new UsernameNotFoundException("Unknown user: "+ inputName);
             }
-
         });
-
-    }
-
-    @Bean
-
-    public PasswordEncoder passwordEncoder() {
-
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
     }
 

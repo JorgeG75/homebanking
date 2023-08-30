@@ -13,12 +13,11 @@ public class AccountDto {
     private Double balance;
     private Set<TransactionDto> transactions;
 
-
-    public AccountDto (Account account){
-        id= account.getId();
-        number= account.getNumber();
-        balance= account.getBalance();
-        creationDate= account.getCreationDate();
+    public AccountDto(Account account) {
+        id = account.getId();
+        number = account.getNumber();
+        balance = account.getBalance();
+        creationDate = account.getCreationDate();
         transactions = account.getTransactions().stream()
                 .map(element -> new TransactionDto(element))
                 .collect(Collectors.toSet());

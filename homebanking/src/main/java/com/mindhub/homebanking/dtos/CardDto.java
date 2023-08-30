@@ -16,6 +16,7 @@ public class CardDto {
     private LocalDate fromDate;
     private LocalDate thruDate;
 
+
     public CardDto (Card card){
         this.id = card.getId();
         this.cardHolder = card.getCardHolder();
@@ -27,12 +28,28 @@ public class CardDto {
         this.thruDate =card.getThruDate();
     }
 
-    public Long getId() { return id;}
-    public String getCardHolder() { return cardHolder;}
-    public CardType getType() { return type;}
-    public CardColor getColor() { return color;}
-    public String getNumber() { return number;}
-    public Integer getCvv() { return cvv;}
-    public LocalDate getFromDate() { return fromDate;}
-    public LocalDate getThruDate() { return thruDate;}
+    public Long getId() {
+        return id;}
+
+    public String getCardHolder() {
+        return cardHolder;}
+
+    public CardType getType() {
+        return type;}
+
+    public CardColor getColor() {
+        return color;}
+
+    public String getNumber() {
+        return number;}
+
+    public Integer getCvv() {
+        return cvv;}
+
+    public LocalDate getFromDate() {
+        return fromDate;}
+
+    public LocalDate getThruDate() {
+        return thruDate;}
+
 }

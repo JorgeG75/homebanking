@@ -17,8 +17,10 @@ public class Loan {
     private Long id;
     private String name;
     private Double maxAmount;
+
     @ElementCollection
     private List<Integer> payments = new ArrayList<>();
+
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "loan")
     private Set<ClientLoan> clients = new HashSet<>();
 

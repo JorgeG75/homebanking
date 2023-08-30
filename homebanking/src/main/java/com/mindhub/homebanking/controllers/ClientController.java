@@ -2,7 +2,10 @@ package com.mindhub.homebanking.controllers;
 
 
 import com.mindhub.homebanking.dtos.ClientDto;
+import com.mindhub.homebanking.models.Account;
 import com.mindhub.homebanking.models.Client;
+import com.mindhub.homebanking.models.RolType;
+import com.mindhub.homebanking.repositories.AccountRepository;
 import com.mindhub.homebanking.repositories.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -20,8 +24,13 @@ import static java.util.stream.Collectors.toList;
 public class ClientController {
     @Autowired
     private PasswordEncoder passwordEncoder;
+
     @Autowired
     private ClientRepository clientRepository;
+
+    @Autowired
+    private AccountRepository accountRepository;
+
     @RequestMapping("/clients")
     public List<ClientDto> getAll(){
         return clientRepository.findAll().stream()
@@ -44,22 +53,28 @@ public class ClientController {
 
         if (clientRepository.findByMail(mail) != null) {
 
-            return new ResponseEntity<>("Name already in use", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("The name is already in use", HttpStatus.FORBIDDEN);
 
         }
 
-        clientRepository.save(new Client(firstName, lastName, mail, passwordEncoder.encode(password)));
+        Account account= new Account("VIN"+String.format("%03d", accountRepository.count()+1), 0.0, LocalDate.now());
+        Client newClient = new Client(firstName, lastName, mail, passwordEncoder.encode(password), RolType.CLIENT);
+        newClient.addAccount(account);
+        clientRepository.save(newClient);
+        accountRepository.save(account);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
 
     }
-    @RequestMapping("/clients/current")
-    public ClientDto getCurrentClient(Authentication authentication) {
-        return new ClientDto(clientRepository.findByMail(authentication.getName()));
-    }
+
     @RequestMapping("/clients/{id}")
     public ClientDto getById(@PathVariable Long id){
         return new ClientDto(clientRepository.findById(id).orElse(null));
+    }
+
+    @RequestMapping("/clients/current")
+    public ClientDto getCurrentClient(Authentication authentication) {
+        return new ClientDto(clientRepository.findByMail(authentication.getName()));
     }
 
 }

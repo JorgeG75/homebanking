@@ -15,6 +15,7 @@ public class Transaction {
     private Double amount;
     private String description;
     private LocalDate creationDate;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="account_id")
     private Account account;
@@ -51,7 +52,6 @@ public class Transaction {
         return amount;
     }
     public void setAmount(Double amount, TransactionType type) {
-
         this.amount = this.type.equals(TransactionType.CREDIT)? amount : -amount;
     }
     public Account getAccount() {

@@ -28,14 +28,14 @@ public class HomebankingApplication {
 									  ClientLoanRepository clientLoanRepository,CardRepository cardRepository){
 		return args -> {
 
-			Client client = new Client("Melba", "Morel","melba@mindhub.com", passwordEncoder.encode("123456"));
+			Client client = new Client("Melba", "Morel","melba@mindhub.com", passwordEncoder.encode("123456"), RolType.CLIENT);
 			clientRepository.save(client);
 
-			Account account1 = new Account(client,"VIN001", 5000.0, LocalDate.now());
+			Account account1 = new Account("VIN001", 5000.0, LocalDate.now());
 			client.addAccount(account1);
 			accountRepository.save(account1);
 
-			Account account2 = new Account(client, "VIN002", 7500.0, LocalDate.now());
+			Account account2 = new Account("VIN002", 7500.0, LocalDate.now());
 			client.addAccount(account2);
 			accountRepository.save(account2);
 
@@ -58,10 +58,10 @@ public class HomebankingApplication {
 
 
             //nuevo cliente
-			Client client1 = new Client("Tomas", "Martinez", "newtmartinez@mindhub.com", passwordEncoder.encode("654321"));
+			Client client1 = new Client("Tomas", "Martinez", "newtmartinez@mindhub.com", passwordEncoder.encode("654321"),RolType.CLIENT);
 			clientRepository.save(client1);
 
-			Account newAccount = new Account(client1, "VIN003", 8000.0, LocalDate.now());
+			Account newAccount = new Account("VIN003", 8000.0, LocalDate.now());
 			client1.addAccount(newAccount);
 			accountRepository.save(newAccount);
 
@@ -139,6 +139,11 @@ public class HomebankingApplication {
 			card3.setThruDate(LocalDate.now().plusYears(5));
 			client1.addCard(card3);
 			cardRepository.save(card3);
+
+
+			//ADMIN
+			clientRepository.save(new Client("admin", "mindHub", "admin@mindhub.com", passwordEncoder.encode("admin"), RolType.ADMIN));
+
 
 		};
 	}

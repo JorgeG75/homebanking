@@ -26,8 +26,7 @@ public class Account {
 
     public Account(){}
 
-    public Account(Client client, String number, Double balance,LocalDate creationDate) {
-        this.setClient(client);
+    public Account(String number, Double balance,LocalDate creationDate) {
         this.number = number;
         this.balance = balance;
         this.creationDate = LocalDate.now();
@@ -35,21 +34,16 @@ public class Account {
     public Long getId() {
         return id;
     }
-    public String getNumber() { return number;}
+    public String getNumber() {
+        return number;}
     public void setNumber(String number) {
         this.number = number;
     }
     public LocalDate getCreationDate() {
         return creationDate;
     }
-    public void setCreationDate(LocalDate creationDate) {
-        this.creationDate = creationDate;
-    }
     public Double getBalance() {
         return balance;
-    }
-    public void setBalance(Double balance) {
-        this.balance = balance;
     }
     public Client getClient() {
         return client;

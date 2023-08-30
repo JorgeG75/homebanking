@@ -1,8 +1,10 @@
 package com.mindhub.homebanking.configurations;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
@@ -10,7 +12,8 @@ import org.springframework.security.web.authentication.logout.HttpStatusReturnin
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
+@EnableWebSecurity
+@Configuration
 public class WebAuthorization {
 
     @Bean
@@ -18,34 +21,37 @@ public class WebAuthorization {
 
 
         http.authorizeRequests()
+                .antMatchers("/web/index.html", "/web/js/**","/web/css/**","/web/img/**").permitAll()
+                .antMatchers(HttpMethod.POST,"/api/login","/api/logout","/api/clients").permitAll()
+                .antMatchers("/h2-console/**","/rest/**", "/api/clients").hasAuthority("ADMIN")
+                .antMatchers("/api/**","/api/clients/{id}").hasAuthority("CLIENT")
+                .antMatchers("/api/clients/current", "/web/**","/api/clients/**").hasAuthority("CLIENT")
+                .antMatchers(HttpMethod.POST, "/clients/current/accounts/**","/clients/current/cards").hasAuthority("CLIENT")
+                .antMatchers("/h2-console/**").hasAuthority("CLIENT")//prueba
 
-                .antMatchers(HttpMethod.GET,"/api/clients/current","/web/**","/api/accounts/**").hasAuthority("USER")
-                .antMatchers(HttpMethod.POST,"/api/**").permitAll()
                 .anyRequest().denyAll();
 
 
         http.formLogin()
-                .usernameParameter("mail")
+                .usernameParameter("email")
                 .passwordParameter("password")
                 .loginPage("/api/login");
 
+        http.logout().logoutUrl("/api/logout");
 
         http.csrf().disable();
 
         http.headers().frameOptions().disable();
-        // if user is not authenticated, just send an authentication failure response
+
         http.exceptionHandling().authenticationEntryPoint((req, res, exc) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED));
 
-        // if login is successful, just clear the flags asking for authentication
         http.formLogin().successHandler((req, res, auth) -> clearAuthenticationAttributes(req));
 
-        // if login fails, just send an authentication failure response
         http.formLogin().failureHandler((req, res, exc) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED));
 
-        // if logout is successful, just send a success response
         http.logout().logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler());
 
-        http.logout().logoutUrl("/api/logout");
+
         return http.build();
 
     }
