@@ -36,6 +36,6 @@ public class BankingUtils {
     }
 
     public static String genAccountId(AccountRepository accountRepository) {
-        return "VIN" + String.format("%03d", accountRepository.count() + 1);
+        return "VIN" + String.format("%08d", accountRepository.count() + 1);
     }
 }

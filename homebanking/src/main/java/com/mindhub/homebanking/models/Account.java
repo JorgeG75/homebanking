@@ -59,4 +59,7 @@ public class Account {
         this.transactions.add(transaction);
     }
 
+    public void setBalance(Double balance) {
+        this.balance = balance;
+    }
 }

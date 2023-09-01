@@ -39,11 +39,11 @@ public class HomebankingApplication {
 			client.addAccount(account2);
 			accountRepository.save(account2);
 
-			Transaction credit1= new Transaction(account1, TransactionType.CREDIT, 3000.0,"debit");
-			Transaction debit1 = new Transaction(account1, TransactionType.DEBIT, 1000.0, "debit");
-			Transaction credit2= new Transaction(account2, TransactionType.CREDIT, 3000.0,"prestamo");
-			Transaction debit2 = new Transaction(account2, TransactionType.DEBIT, 600.0, "pago chinos");
-			Transaction credit3= new Transaction(account1, TransactionType.CREDIT, 2500.0, "reembolso tarjeta");
+			Transaction credit1= new Transaction(TransactionType.CREDIT, 3000.0,"debit");
+			Transaction debit1 = new Transaction(TransactionType.DEBIT, 1000.0, "debit");
+			Transaction credit2= new Transaction(TransactionType.CREDIT, 3000.0,"prestamo");
+			Transaction debit2 = new Transaction(TransactionType.DEBIT, 600.0, "pago chinos");
+			Transaction credit3= new Transaction(TransactionType.CREDIT, 2500.0, "reembolso tarjeta");
 
 			account1.addTransaction(credit1);
 			account2.addTransaction(debit1);
@@ -65,11 +65,11 @@ public class HomebankingApplication {
 			client1.addAccount(newAccount);
 			accountRepository.save(newAccount);
 
-			Transaction newcredit1= new Transaction(newAccount, TransactionType.CREDIT, 1500.0,"credit");
-			Transaction newdebit1 = new Transaction(newAccount, TransactionType.DEBIT, 1000.0, "debit");
-			Transaction newcredit2= new Transaction(newAccount, TransactionType.CREDIT, 3000.0,"prestamo");
-			Transaction newdebit2 = new Transaction(newAccount, TransactionType.DEBIT, 600.0, "pago chinos");
-			Transaction newcredit3= new Transaction(newAccount, TransactionType.CREDIT, 2500.0, "reembolso tarjeta");
+			Transaction newcredit1= new Transaction(TransactionType.CREDIT, 1500.0,"credit");
+			Transaction newdebit1 = new Transaction(TransactionType.DEBIT, 1000.0, "debit");
+			Transaction newcredit2= new Transaction(TransactionType.CREDIT, 3000.0,"prestamo");
+			Transaction newdebit2 = new Transaction(TransactionType.DEBIT, 600.0, "pago chinos");
+			Transaction newcredit3= new Transaction(TransactionType.CREDIT, 2500.0, "reembolso tarjeta");
 
 			newAccount.addTransaction(newcredit1);
 			newAccount.addTransaction(newdebit1);
