@@ -90,13 +90,13 @@ public class HomebankingApplication {
 
 			Loan loan2 = new Loan("personal", 100000.0, List.of(6,12,24));
 			loanRepository.save(loan2);
-			ClientLoan clientLoan1 = new ClientLoan(loan2,  40000.0, 12);
+			ClientLoan clientLoan1 = new ClientLoan(loan2, 40000.0, 12);
 			client.addClientLoan(clientLoan1);
 			clientLoanRepository.save(clientLoan1);
 
 			Loan loan3 = new Loan("personal", 100000.0, List.of(6,12,24));
 			loanRepository.save(loan3);
-			ClientLoan clientLoan2 = new ClientLoan(loan3,  100000.0, 24);
+			ClientLoan clientLoan2 = new ClientLoan(loan3,100000.0, 24);
 			client1.addClientLoan(clientLoan2);
 			clientLoanRepository.save(clientLoan2);
 
