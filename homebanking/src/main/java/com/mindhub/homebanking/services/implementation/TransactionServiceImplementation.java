@@ -34,23 +34,20 @@ public class TransactionServiceImplementation implements TransactionService {
     }
 
     @Override
-    public void makeTransaction(Double amount, String description, String accountFromNumber, String toAccountNumber, Authentication authentication) {
+    public void createdTransaction(Double amount, String description, String accountFromNumber, String toAccountNumber, Authentication authentication) {
 
-        //creamos la transaccion
         Transaction transactionDebit = new Transaction(TransactionType.DEBIT,amount, description);
         Transaction transactionCredit = new Transaction(TransactionType.CREDIT,amount, description);
 
-        //actualizamos el balance de la cuenta origen
         accountRepository.findByNumber(accountFromNumber).setBalance(accountRepository.findByNumber(accountFromNumber).getBalance() - amount);
         accountRepository.findByNumber(accountFromNumber).addTransaction(transactionDebit);
-        //actualizamos el balance de la cuenta destino
         accountRepository.findByNumber(toAccountNumber).setBalance(accountRepository.findByNumber(toAccountNumber).getBalance() + amount);
         accountRepository.findByNumber(toAccountNumber).addTransaction(transactionCredit);
-        //guardamos la transaccion
         transactionRepository.save(transactionDebit);
         transactionRepository.save(transactionCredit);
-        //guardamos los cambios en las cuentas
         accountRepository.save(accountRepository.findByNumber(accountFromNumber));
         accountRepository.save(accountRepository.findByNumber(toAccountNumber));
+
     }
+
 }

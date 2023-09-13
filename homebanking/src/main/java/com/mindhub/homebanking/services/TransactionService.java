@@ -12,7 +12,7 @@ public interface TransactionService {
 
     TransactionDto getById(@PathVariable Long id);
 
-    void makeTransaction(
+    void createdTransaction(
             @RequestParam Double amount, @RequestParam String description ,
             @RequestParam(value = "fromAccountNumber") String accountFromNumber, @RequestParam String toAccountNumber,
             Authentication authentication);

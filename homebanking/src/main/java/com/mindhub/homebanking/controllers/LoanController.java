@@ -49,10 +49,10 @@ public class LoanController {
         if (loanId==null || amount == null || payments == null || toAccountNumber.isEmpty()) {
             return new ResponseEntity<>("Missing data", HttpStatus.FORBIDDEN);
         }
-        if (amount <= 0) {
+        if (amount < 0) {
             return new ResponseEntity<>("Amount must be positive", HttpStatus.FORBIDDEN);
         }
-        if (payments <= 0) {
+        if (payments < 0) {
             return new ResponseEntity<>("Payments must be positive", HttpStatus.FORBIDDEN);
         }
         if (!loanRepository.findById(loanId).isPresent() ) {

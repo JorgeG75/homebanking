@@ -29,42 +29,34 @@ import java.util.List;
     }
     @Transactional
     @RequestMapping(value = "/transactions",method = RequestMethod.POST)
-    public ResponseEntity makeTransaction(
+    public ResponseEntity createdTransaction(
             @RequestParam Double amount, @RequestParam String description ,
             @RequestParam(value = "fromAccountNumber") String accountFromNumber, @RequestParam String toAccountNumber,
             Authentication authentication){
 
-
-        //verificamos que los parametros no esten vacios
         if (amount == null || description == null || accountFromNumber == null || toAccountNumber == null) {
             return new ResponseEntity<>("Missing data", HttpStatus.FORBIDDEN);
         }
-        //verificamos que el numero de cuenta de origen y destino no sean iguales
         if (accountFromNumber.equals(toAccountNumber)) {
             return new ResponseEntity<>("The origin and destination accounts are the same", HttpStatus.FORBIDDEN);
         }
-        //verificamos que el numero de cuenta de origen exista
         if (accountRepository.findByNumber(accountFromNumber) == null) {
             return new ResponseEntity<>("The origin account does not exist", HttpStatus.FORBIDDEN);
         }
-        //verificamos que el numero de cuenta de destino exista
         if (accountRepository.findByNumber(toAccountNumber) == null) {
             return new ResponseEntity<>("The destination account does not exist", HttpStatus.FORBIDDEN);
         }
-        //verificamos que el numero de cuenta de origen pertenezca al cliente logueado
         if (!accountRepository.findByNumber(accountFromNumber).getClient().getMail().equals(authentication.getName())) {
             return new ResponseEntity<>("The origin account does not belong to the logged in client", HttpStatus.FORBIDDEN);
         }
-        //vericiamos que hayta fondos en la cuenta origen
         if (accountRepository.findByNumber(accountFromNumber).getBalance() < amount) {
             return new ResponseEntity<>("Insufficient funds", HttpStatus.FORBIDDEN);
         }
-        //verificamos que el monto sea mayor a 0
-        if (amount <= 0) {
+        if (amount < 0) {
             return new ResponseEntity<>("The amount must be greater than 0", HttpStatus.FORBIDDEN);
         }
 
-        transactionService.makeTransaction(amount,description,accountFromNumber,toAccountNumber,authentication);
+        transactionService.createdTransaction(amount,description,accountFromNumber,toAccountNumber,authentication);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
 

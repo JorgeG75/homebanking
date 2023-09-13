@@ -42,25 +42,20 @@ public class LoanServiceImplementation implements LoanService {
         Integer payments = loanApplicationDto.getPayments();
         String toAccountNumber = loanApplicationDto.getToAccountNumber();
 
-
         clientRepository.findByMail(authentication.getName());
-        ClientLoan clientLoan =new ClientLoan(amount,payments);
 
+        //loan mas el 20%
+        ClientLoan clientLoan =new ClientLoan(loanApplicationDto.getAmount() + amount*0.2, loanApplicationDto.getPayments());
 
         clientRepository.findByMail(authentication.getName()).addClientLoan(clientLoan);
         loanRepository.findById(loanId).get().addClientLoan(clientLoan);
 
         clientLoanRepository.save(clientLoan);
 
-        //creamos la transaccion
         Transaction transactionLoan = new Transaction(TransactionType.CREDIT,amount, "loan approved");
-
-        //actualizamos el balance de la cuenta destino
         accountRepository.findByNumber(toAccountNumber).setBalance(accountRepository.findByNumber(toAccountNumber).getBalance() + amount);
         accountRepository.findByNumber(toAccountNumber).addTransaction(transactionLoan);
-        //guardamos la transaccion
         transactionRepository.save(transactionLoan);
-        //guardamos los cambios en las cuentas
         accountRepository.save(accountRepository.findByNumber(toAccountNumber));
     }
 }
