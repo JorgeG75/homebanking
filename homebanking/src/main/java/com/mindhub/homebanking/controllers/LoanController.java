@@ -10,12 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @RestController
@@ -41,37 +41,36 @@ public class LoanController {
             @RequestBody LoanApplicationDto loanApplicationDto,
             Authentication authentication){
 
-        Long idLoan = loanApplicationDto.getIdLoan();
-        Double amount = LoanApplicationDto.getAmount();
-        Integer payments = LoanApplicationDto.getPayments();
-        String toAccountNumber = LoanApplicationDto.getToAccountNumber();
+        Long loanId = loanApplicationDto.getIdLoan();
+        Double amount = loanApplicationDto.getAmount();
+        Integer payments = loanApplicationDto.getPayments();
+        String toAccountNumber = loanApplicationDto.getToAccountNumber();
 
-        if (idLoan==null || amount == null || payments == null || toAccountNumber == null) {
-            return new ResponseEntity<>("Debe completar todos campos", HttpStatus.FORBIDDEN);
+        if (loanId==null || amount == null || payments == null || toAccountNumber.isEmpty()) {
+            return new ResponseEntity<>("Missing data", HttpStatus.FORBIDDEN);
         }
-        if (amount < 0) {
-            return new ResponseEntity<>("Ingrese un monto mayor que 0", HttpStatus.FORBIDDEN);
+        if (amount <= 0) {
+            return new ResponseEntity<>("Amount must be positive", HttpStatus.FORBIDDEN);
         }
-        if (payments < 0) {
-            return new ResponseEntity<>("El monto del pago debe ser mayor que cero", HttpStatus.FORBIDDEN);
+        if (payments <= 0) {
+            return new ResponseEntity<>("Payments must be positive", HttpStatus.FORBIDDEN);
         }
-        if (!loanRepository.findById(idLoan).isPresent() ) {
-            return new ResponseEntity<>("El tipo prestamo no existe", HttpStatus.FORBIDDEN);
+        if (!loanRepository.findById(loanId).isPresent() ) {
+            return new ResponseEntity<>("Loan not exist", HttpStatus.FORBIDDEN);
         }
         if (accountRepository.findByNumber(toAccountNumber) == null) {
-            return new ResponseEntity<>("La cuenta de destino no existe", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("The destination account does not exist", HttpStatus.FORBIDDEN);
         }
         if (!accountRepository.findByNumber(toAccountNumber).getClient().getMail().equals(authentication.getName())) {
-            return new ResponseEntity<>("Esta cuenta no le pertenece ingrese una valida", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("The destination account does not belong to the logged user", HttpStatus.FORBIDDEN);
         }
 
-        if(amount>loanRepository.findById(idLoan).get().getMaxAmount()){
-            return new ResponseEntity<>("El monto supera la cantidad permitida", HttpStatus.FORBIDDEN);
+        if(amount>loanRepository.findById(loanId).get().getMaxAmount()){
+            return new ResponseEntity<>("The amount is greater than the maximum allowed", HttpStatus.FORBIDDEN);
         }
 
         loanService.createLoan(loanApplicationDto,authentication);
 
         return  new ResponseEntity<>(HttpStatus.CREATED);
     }
-
 }

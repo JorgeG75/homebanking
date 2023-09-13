@@ -25,7 +25,7 @@ public class Transaction {
     public Transaction( TransactionType type, Double amount, String description) {
         this.type = type;
         setAmount( amount, type);
-        //this.account.addTransaction(this);
+        this.account.addTransaction(this);
         this.description = description;
         this.creationDate = LocalDate.now();
     }

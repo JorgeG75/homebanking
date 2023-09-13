@@ -9,5 +9,7 @@ import java.util.List;
 public interface LoanService {
     List<LoanDto> getAll();
 
-    void createLoan(LoanApplicationDto loanApplicationDTO, Authentication authentication);
+    void createLoan(
+            LoanApplicationDto loanApplicationDto,
+            Authentication authentication);
 }
