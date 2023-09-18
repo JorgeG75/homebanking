@@ -29,7 +29,7 @@ public class Account {
     public Account(String number, Double balance,LocalDate creationDate) {
         this.number = number;
         this.balance = balance;
-        this.creationDate = LocalDate.now();
+        this.creationDate = creationDate;
     }
     public Long getId() {
         return id;

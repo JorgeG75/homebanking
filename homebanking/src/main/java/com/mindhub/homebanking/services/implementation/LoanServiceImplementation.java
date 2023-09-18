@@ -37,7 +37,7 @@ public class LoanServiceImplementation implements LoanService {
 
     @Override
     public void createLoan(LoanApplicationDto loanApplicationDto, Authentication authentication) {
-        Long loanId = loanApplicationDto.getIdLoan();
+        Long loanId = loanApplicationDto.getLoanId();
         Double amount = loanApplicationDto.getAmount();
         Integer payments = loanApplicationDto.getPayments();
         String toAccountNumber = loanApplicationDto.getToAccountNumber();

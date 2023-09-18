@@ -1,7 +1,5 @@
 package com.mindhub.homebanking.utils;
 
-import com.mindhub.homebanking.repositories.AccountRepository;
-
 import java.util.Random;
 
 public class BankingUtils {
@@ -35,7 +33,4 @@ public class BankingUtils {
         return (300 + (sum % 1000));
     }
 
-    public static String genAccountId(AccountRepository accountRepository) {
-        return "VIN" + String.format("%08d", accountRepository.count() + 1);
-    }
 }
